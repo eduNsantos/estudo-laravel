@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
-use App\Forms\RenderValidation as RV;
+use  App\Http\Requests\StoreCategory;
 
 class CategoryController extends Controller
 {
@@ -17,7 +17,7 @@ class CategoryController extends Controller
     {
         $categories = new Category;
         $categories = $categories->all();
-
+        
         return view('category.index', compact('categories'));
     }
 
@@ -34,20 +34,14 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\StoreCategory  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategory $request)
     {
-        $validator = $request->validate([
-            'name' => 'required|unique:categories',
-            'description' => 'required'
-        ]);
-        
-
         Category::create($request->all());
 
-        $request->session()->flash('message', 'Categoria cadastrada com sucesso!');
+        $request->session()->flash('alert', 'Categoria cadastrada com sucesso!');
         return redirect()->route('category.index');
     }
 
@@ -71,7 +65,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = new Category;
-        $category = $category->find($id);
+        $category = $category->findOrFail($id);
         $categories = $category->all();
 
         return view('category.edit', compact('category', 'categories'));
@@ -80,11 +74,11 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\StoreCategory  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCategory $request, $id)
     {
         $category = Category::find($id);
         $category->fill([
@@ -95,7 +89,7 @@ class CategoryController extends Controller
         $category->save();
 
         
-        session()->flash('message', 'Categoria alterada com sucesso!');
+        session()->flash('alert', 'Categoria alterada com sucesso!');
         return back();
     }
 
@@ -109,7 +103,7 @@ class CategoryController extends Controller
     {
         $category = Category::destroy($id);
 
-        session()->flash('message', 'Categoria excluida com sucesso!');
+        session()->flash('alert', 'Categoria excluida com sucesso!');
         return back();
     }
 }
