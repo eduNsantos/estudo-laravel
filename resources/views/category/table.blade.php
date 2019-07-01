@@ -1,11 +1,13 @@
 
 <h2>Categorias cadastradas</h2>
-<table class="table table-hover table-striped table-bordered my-2">
+<table class="table table-striped table-bordered my-2">
     <thead>
         <tr>
             <th>ID</th>
             <th>Nome</th>
             <th>Descrição</th>
+            <th>Data de cadastro</th>
+            <th>Última alteração</th>
             <th>Ativo</th>
             <th>Ações</th>
         </tr>
@@ -16,6 +18,8 @@
                 <td>{{ $category->id }}</td>
                 <td>{{ $category->name }}</td>
                 <td>{{ $category->description }}</td>
+                <td>{{ date('d/m/Y H:i', strtotime($category->created_at)) }}</td>
+                <td>{{ date('d/m/Y H:i', strtotime($category->updated_at)) }}</td>
                 <td class="{{ $category->is_active ? 'bg-success' : 'bg-danger' }}">
                     {{ $category->is_active ? 'Sim' : 'Não' }}
                 </td>

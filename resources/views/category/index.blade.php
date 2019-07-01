@@ -1,17 +1,17 @@
 @extends('templates.admin')
 
-@section('title', 'Cadastrar categoria')
+@section('title', 'Cadastrar produto')
 
 @section('container')
-    @component('category.form')
-        @section('action', 'Cadastrar')
+    @component('templates.simple-form')
+        @section('form-title', 'Cadastrar categoria')
 
         @section('route', route('category.store'))
-    @endcomponent
 
-    @component('components.errors')
+        @section('form-fields')
+            @include('category.form')        
+        @endsection
     @endcomponent
-
 
     @component('category.table')
         @slot('categories', $categories)
