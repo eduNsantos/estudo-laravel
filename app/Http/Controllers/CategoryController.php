@@ -15,9 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = new Category;
-        $categories = $categories->all();
-        
+        $categories = $this->getCategories();
+
         return view('category.index', compact('categories'));
     }
 
@@ -39,10 +38,27 @@ class CategoryController extends Controller
      */
     public function store(StoreCategory $request)
     {
-        Category::create($request->all());
+        $category = Category::create($request->all());
 
-        $request->session()->flash('alert', 'Categoria cadastrada com sucesso!');
-        return redirect()->route('category.index');
+        if ($category) {
+            $newCategory = Category::all()->last();
+            
+            return Response()->json([
+                'status' => 200,
+                'message' => 'Categoria cadastrada com sucesso!',
+                'newCategory' =>  $newCategory
+            ]);
+        } else {
+            return Response()->json([
+                'status' => 500,
+                'message' => 'Erro interno do servidor'
+            ]);
+        }
+    }
+
+    public function getCategories()
+    {
+        return Category::all();
     }
 
     /**
@@ -103,7 +119,30 @@ class CategoryController extends Controller
     {
         $category = Category::destroy($id);
 
-        session()->flash('alert', 'Categoria excluida com sucesso!');
-        return back();
+        return Response()->json([
+            'message' => 'Item ' . $id . ' excluído com sucesso!',
+            'status' => 200 
+        ]);
+    }
+
+    /**
+     * deactive
+     *
+     * @param  int $id
+     *
+     * @return void
+     */
+    public function deactive($id)
+    {
+        $category = Category::find($id);
+        $category->status = !$category->status;
+        $category->save();
+
+        $categoryNewStatus = Category::find($id)->get();
+
+        return Response()->json([
+            'categoryNewStatus' => $categoryNewStatus
+        ]);
+
     }
 }
