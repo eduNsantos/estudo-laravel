@@ -1,19 +1,10 @@
 @extends('templates.admin')
 
-@section('title', 'Cadastrar produto')
+@section('title', 'Cadastrar categoria')
 
 @section('container')
-    @component('templates.simple-form')
-        @section('form-title', 'Cadastrar categoria')
-
-        @section('route', route('category.store'))
-
-        @section('form-fields')
-            @include('category.form')        
-        @endsection
-    @endcomponent
-
-    @component('category.table')
-        @slot('categories', $categories)
-    @endcomponent
+    <vc-category-index 
+        route="{{ route('category.index') }}"
+        :categories="{{ $categories }}">
+    </vc-category-index>
 @endsection
